@@ -1,0 +1,16 @@
+{
+  "name": "renting-site",
+  "version": "1.0.0",
+  "description": "Property rental website for B.G Affordable Housing",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve -s .",
+    "build": "echo 'No build required'"
+  },
+  "dependencies": {
+    "serve": "^14.2.0"
+  },
+  "keywords": ["property", "rental", "housing"],
+  "author": "B.G Affordable Housing",
+  "license": "MIT"
+}
