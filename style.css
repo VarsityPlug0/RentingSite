@@ -805,6 +805,11 @@ button[type="submit"]:hover {
     flex-wrap: wrap;
     gap: 15px;
     margin-top: 15px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 10px;
+    border: 1px dashed #ccc;
+    border-radius: 8px;
 }
 
 .image-preview-item {

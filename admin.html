@@ -551,10 +551,8 @@
                     
                     if (this.files && this.files.length > 0) {
                         try {
-                            // Show processing message for large numbers of images
-                            if (this.files.length > 20) {
-                                imagePreviewContainer.innerHTML = `<p>Processing ${this.files.length} images... Please wait.</p>`;
-                            }
+                            // Show processing message for any number of images
+                            imagePreviewContainer.innerHTML = `<p>Processing ${this.files.length} images... Please wait.</p>`;
                             
                             // Use the image handler to process images
                             uploadedImageData = await imageHandler.processImages(this.files);
@@ -569,7 +567,9 @@
                             }
                             
                             // Create previews for all valid images
-                            uploadedImageData.forEach(imageData => {
+                            // Limit preview display to 50 images to prevent UI issues
+                            const imagesToDisplay = uploadedImageData.slice(0, 50);
+                            imagesToDisplay.forEach(imageData => {
                                 const imgContainer = document.createElement('div');
                                 imgContainer.className = 'image-preview-item';
                                 
@@ -591,13 +591,23 @@
                             });
                             
                             // Show summary
+                            let summaryText = '';
                             if (uploadedImageData.length !== this.files.length) {
                                 const invalidCount = this.files.length - uploadedImageData.length;
-                                const summary = document.createElement('div');
-                                summary.className = 'image-summary';
-                                summary.innerHTML = `<p>Processed ${uploadedImageData.length} valid images. ${invalidCount} files were skipped (invalid format or too large).</p>`;
-                                imagePreviewContainer.appendChild(summary);
+                                summaryText += `Processed ${uploadedImageData.length} valid images. ${invalidCount} files were skipped (invalid format or too large).`;
+                            } else {
+                                summaryText += `Successfully processed ${uploadedImageData.length} images.`;
                             }
+                            
+                            // Add note if we're only displaying a subset of images
+                            if (uploadedImageData.length > 50) {
+                                summaryText += `<br><strong>Note:</strong> Only showing previews for the first 50 images. All ${uploadedImageData.length} images will be saved with the property.`;
+                            }
+                            
+                            const summary = document.createElement('div');
+                            summary.className = 'image-summary';
+                            summary.innerHTML = `<p>${summaryText}</p>`;
+                            imagePreviewContainer.appendChild(summary);
                             
                         } catch (error) {
                             console.error('Error processing images:', error);

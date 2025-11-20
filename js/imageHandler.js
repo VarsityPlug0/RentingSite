@@ -69,7 +69,8 @@ class ImageHandler {
             }
             
             // Yield control back to the browser periodically to prevent UI freezing
-            if (i % 10 === 9) {  // Every 10 images
+            // More frequent yields for better responsiveness with many images
+            if (i % 5 === 4) {  // Every 5 images for better responsiveness
                 await new Promise(resolve => setTimeout(resolve, 0));
             }
         }
