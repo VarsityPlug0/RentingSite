@@ -621,31 +621,30 @@
             const propertyForm = document.querySelector('.property-form');
             if (propertyForm) {
                 propertyForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    
-                    // Check if we're in update mode
+                    // Get the submit button to check its text
                     const submitButton = document.querySelector('.btn-submit');
-                    if (submitButton && submitButton.textContent === 'Update Property') {
-                        // Don't prevent default here as the update function handles it
-                        return;
-                    }
                     
-                    // If we get here, we're adding a new property
-                    
-                    // Get form data
-                    const formData = new FormData(this);
-                    const newProperty = {
-                        id: properties.length > 0 ? Math.max(...properties.map(p => p.id)) + 1 : 1,
-                        address: formData.get('property-address'),
-                        price: `$${formData.get('property-price')}/month`,
-                        beds: formData.get('property-beds') || null,
-                        baths: formData.get('property-baths') || null,
-                        sqft: formData.get('property-sqft') || null,
-                        description: formData.get('property-description'),
-                        tags: formData.get('property-tags').split(',').map(tag => tag.trim()).filter(tag => tag),
-                        images: [], // Will store multiple images
-                        status: formData.get('property-status')
-                    };
+                    // Only prevent default and handle manually if this is the add property form
+                    // (not the update form which has different handling)
+                    if (!submitButton || submitButton.textContent !== 'Update Property') {
+                        e.preventDefault();
+                        
+                        // We're adding a new property
+                        
+                        // Get form data
+                        const formData = new FormData(this);
+                        const newProperty = {
+                            id: properties.length > 0 ? Math.max(...properties.map(p => p.id)) + 1 : 1,
+                            address: formData.get('property-address'),
+                            price: `$${formData.get('property-price')}/month`,
+                            beds: formData.get('property-beds') || null,
+                            baths: formData.get('property-baths') || null,
+                            sqft: formData.get('property-sqft') || null,
+                            description: formData.get('property-description'),
+                            tags: formData.get('property-tags').split(',').map(tag => tag.trim()).filter(tag => tag),
+                            images: [], // Will store multiple images
+                            status: formData.get('property-status')
+                        };
                     
                     // Handle multiple image uploads with actual image data
                     if (uploadedImageData && uploadedImageData.length > 0) {
@@ -685,7 +684,8 @@
                     imagePreviewContainer.innerHTML = '';
                     
                     alert('Property added successfully!');
-                });
+                }
+            });
             }
         });
     </script>
