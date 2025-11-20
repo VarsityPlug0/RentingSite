@@ -872,6 +872,16 @@ button[type="submit"]:hover {
     font-weight: bold;
 }
 
+.image-summary {
+    grid-column: 1 / -1;
+    padding: 15px;
+    background: #e3f2fd;
+    border-radius: 8px;
+    margin-top: 15px;
+    color: #2c3e50;
+    font-weight: 500;
+}
+
 .property-image-preview {
     position: relative;
 }
@@ -1114,4 +1124,3 @@ button[type="submit"]:hover {
             grid-template-columns: 1fr;
         }
     }
-}

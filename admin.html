@@ -551,8 +551,22 @@
                     
                     if (this.files && this.files.length > 0) {
                         try {
+                            // Show processing message for large numbers of images
+                            if (this.files.length > 20) {
+                                imagePreviewContainer.innerHTML = `<p>Processing ${this.files.length} images... Please wait.</p>`;
+                            }
+                            
                             // Use the image handler to process images
                             uploadedImageData = await imageHandler.processImages(this.files);
+                            
+                            // Clear container before adding previews
+                            imagePreviewContainer.innerHTML = '';
+                            
+                            // Show message if no valid images were processed
+                            if (uploadedImageData.length === 0) {
+                                imagePreviewContainer.innerHTML = '<p>No valid images found. Please select image files (JPEG, PNG, GIF, WebP) under 5MB.</p>';
+                                return;
+                            }
                             
                             // Create previews for all valid images
                             uploadedImageData.forEach(imageData => {
@@ -576,9 +590,18 @@
                                 imagePreviewContainer.appendChild(imgContainer);
                             });
                             
+                            // Show summary
+                            if (uploadedImageData.length !== this.files.length) {
+                                const invalidCount = this.files.length - uploadedImageData.length;
+                                const summary = document.createElement('div');
+                                summary.className = 'image-summary';
+                                summary.innerHTML = `<p>Processed ${uploadedImageData.length} valid images. ${invalidCount} files were skipped (invalid format or too large).</p>`;
+                                imagePreviewContainer.appendChild(summary);
+                            }
+                            
                         } catch (error) {
                             console.error('Error processing images:', error);
-                            alert('Error processing images. Please try again.');
+                            imagePreviewContainer.innerHTML = '<p>Error processing images. Please try again.</p>';
                         }
                     }
                 });

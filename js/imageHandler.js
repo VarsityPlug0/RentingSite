@@ -43,6 +43,8 @@ class ImageHandler {
     async processImages(files) {
         const processedImages = [];
         
+        // Process images with better error handling and support for unlimited uploads
+        // Process in batches to prevent UI freezing with large numbers of images
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
             const validation = this.validateImage(file);
@@ -59,9 +61,16 @@ class ImageHandler {
                     });
                 } catch (error) {
                     console.error(`Error processing file ${file.name}:`, error);
+                    // Continue processing other files even if one fails
                 }
             } else {
                 console.warn(`Invalid file ${file.name}:`, validation.errors);
+                // Continue processing other files even if one is invalid
+            }
+            
+            // Yield control back to the browser periodically to prevent UI freezing
+            if (i % 10 === 9) {  // Every 10 images
+                await new Promise(resolve => setTimeout(resolve, 0));
             }
         }
         
